@@ -1,3 +1,5 @@
+/*
+
 package se.dku.simple.dao;
 
 import java.sql.SQLException;
@@ -32,3 +34,5 @@ public class UserDaoConnectionCountingTest {
 		
 	}
 }
+
+*/

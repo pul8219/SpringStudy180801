@@ -5,14 +5,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+//DataSource 클래스 사용 위해 필요
+import javax.sql.DataSource;
 
 public class UserDao {
 	
-	private ConnectionMaker connectionMaker;
+	private DataSource dataSource;
 	
 	// 수정자 메소드 DI 방식을 사용한 UserDao (아래의 생성자 파라미터 방식 대신 사용)
-	public void setConnectionMaker(ConnectionMaker connectionMaker){
-		this.connectionMaker = connectionMaker;
+	public void setDataSource(DataSource dataSource){
+		this.dataSource = dataSource;
 	}
 	
 	/*
@@ -40,11 +42,11 @@ public class UserDao {
 	
 	
 	// 새로운 사용자를 생성하는 메소드
-	public void add(User user) throws ClassNotFoundException, SQLException {
+	public void add(User user) throws SQLException {
 		
 		// 문제O -> 분리 필요한 코드
 		// UserDao에서 어떤 ConnectionMaker 구현 클래스를 사용할지를 결정하는 관심사를 가지고 있음
-		Connection c = connectionMaker.makeConnection();
+		Connection c = dataSource.getConnection();
 		
 		PreparedStatement ps = c.prepareStatement(
 				"insert into users(id, name, password) values(?, ?, ?)");
@@ -59,9 +61,9 @@ public class UserDao {
 	}
 
 	// id를 통해 사용자 정보를 읽어오는 메소드
-	public User get(String id) throws ClassNotFoundException, SQLException {
+	public User get(String id) throws SQLException {
 		
-		Connection c = connectionMaker.makeConnection();
+		Connection c = dataSource.getConnection();
 		
 		PreparedStatement ps = c.prepareStatement(
 				"select * from users where id = ?");
